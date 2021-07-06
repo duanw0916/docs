@@ -11,65 +11,40 @@ and use [pylint](https://www.pylint.org/) to check your Python changes.
 
 ### pylint
 
-To install `pylint` and retrieve TensorFlow's custom style definition:
+To install `pylint`:
 
 ```bash
-
 $ pip install pylint
-$ wget -O /tmp/pylintrc https://raw.githubusercontent.com/tensorflow/tensorflow/master/tensorflow/tools/ci_build/pylintrc
-
 ```
 
-
-To check a file with `pylint`:
+To check a file with `pylint` from the TensorFlow source code root directory:
 
 ```bash
-$ pylint --rcfile=/tmp/pylintrc myfile.py
+$ pylint --rcfile=tensorflow/tools/ci_build/pylintrc tensorflow/python/keras/losses.py
 ```
 
 ### Supported Python versions
 
-We currently support Python 3.4, 3.5, 3.6, and 2.7.
+For supported Python versions, see the TensorFlow
+[installation guide](https://www.tensorflow.org/install).
 
-A full list of official and community-supported builds can be found in the
-README file in
-[tensorflow/tensorflow](https://github.com/tensorflow/tensorflow), and detailed
-installation instructions can be found
-[here](https://www.tensorflow.org/install/pip#1-install-the-python-development-environment-on-your-system).
-
-#### Legacy Python compatibility
-
-TensorFlow will support Legacy Python (Python 2.7) until
-[January 1, 2020](https://groups.google.com/a/tensorflow.org/forum/#!searchin/announce/python$202.7%7Csort:date/announce/gVwS5RC8mds/dCt1ka2XAAAJ).
-Until that time, all code will need to be compatible with the Python versions
-listed above.
-
-These lines should be present in every Python file:
-
-
-```python
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-```
-
-Use `six` to write compatible code (for example, `six.moves.range`).
+See the TensorFlow
+[continuous build status](https://github.com/tensorflow/tensorflow/blob/master/README.md#continuous-build-status)
+for official and community supported builds.
 
 
 ## C++ coding style
 
 Changes to TensorFlow C++ code should conform to the [Google C++ Style
-Guide](https://google.github.io/styleguide/cppguide.html). Use `clang-tidy` to
-check your C/C++ changes.
+Guide](https://google.github.io/styleguide/cppguide.html) and [TensorFlow specific style details](https://github.com/tensorflow/community/blob/master/governance/cpp-style.md). Use `clang-format` to check your C/C++ changes.
 
-To install `clang-tidy` on Ubuntu 16+, do:
-
+To install on Ubuntu 16+, do:
 
 ```bash
-$ apt-get install -y clang-tidy
+$ apt-get install -y clang-format
 ```
 
-You can check a C/C++ file by using the following:
+You can check the format of a C/C++ file with the following:
 
 ```bash
 $ clang-format <my_cc_file> --style=google > /tmp/my_cc_file.cc
@@ -88,23 +63,10 @@ $ diff <my_cc_file> /tmp/my_cc_file.cc
 
 ## TensorFlow conventions and special uses
 
-### Tensors
-
-*   Operations that deal with batches may assume that the **first dimension** of
-    a Tensor is the batch dimension.
-*   In most models, the **last dimension** is the number of _channels_.
-*   Dimensions excluding the first and last usually make up the _space_
-    dimensions: sequence-length, or image-size.
-*   When possible, use a Tensor's overloaded operators rather than TensorFlow
-    functions. For example, we prefer `**`, `+`, `/`, `*`, `-`, `and/or` over
-    `tf.pow`, `tf.add`, `tf.div`, `tf.mul`, `tf.subtract`, and `tf.logical_*` —
-    unless a specific name for the operation is desired.
-
-
 ### Python operations
 
-A _Python operation_ is a function that, given input tensors and parameters,
-creates a part of the graph and returns output tensors.
+A TensorFlow _operation_ is a function that, given input tensors returns output
+tensors (or adds an op to a graph when building graphs).
 
 *   The first argument should be tensors, followed by basic Python parameters.
     The last argument is `name` with a default value of `None`.

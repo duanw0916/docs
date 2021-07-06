@@ -2,8 +2,8 @@
 
 Build a TensorFlow *pip* package from source and install it on Windows.
 
-Note: We already provide well-tested, pre-built [TensorFlow packages](./pip.md)
-for Windows systems.
+Note: We already provide well-tested, pre-built
+[TensorFlow packages](./pip.html) for Windows systems.
 
 ## Setup for Windows
 
@@ -13,8 +13,9 @@ environment.
 ### Install Python and the TensorFlow package dependencies
 
 Install a
-[Python 3.5.x or Python 3.6.x 64-bit release for Windows](https://www.python.org/downloads/windows/){:.external}.
-Select *pip* as an optional feature and add it to your `%PATH%` environmental variable.
+[Python 3.6.x 64-bit release for Windows](https://www.python.org/downloads/windows/){:.external}.
+Select *pip* as an optional feature and add it to your `%PATH%` environmental
+variable.
 
 Install the TensorFlow *pip* package dependencies:
 
@@ -30,12 +31,14 @@ file under `REQUIRED_PACKAGES`.
 
 ### Install Bazel
 
-[Install Bazel 0.23.0](https://docs.bazel.build/versions/master/install-windows.html){:.external},
-the build tool used to compile TensorFlow. Set up Bazel to [build C++](https://docs.bazel.build/versions/master/windows.html#build-c){:.external}.
+[Install Bazel](./source.md#install-bazel), the build tool used to compile
+TensorFlow. For Bazel version, see the
+[tested build configurations](#tested-build-configurations) for Windows.
+Configure Bazel to
+<a href="https://docs.bazel.build/versions/master/windows.html#build-c" class="external">build
+C++</a>.
 
 Add the location of the Bazel executable to your `%PATH%` environment variable.
-
-Ensure you install Bazel 0.23.0 or lower.
 
 ### Install MSYS2
 
@@ -48,24 +51,24 @@ run:
 pacman -S git patch unzip
 </pre>
 
-### Install Visual C++ Build Tools 2015
+### Install Visual C++ Build Tools 2019
 
-Install the *Visual C++ build tools 2015*. This comes with *Visual Studio 2015*
+Install the *Visual C++ build tools 2019*. This comes with *Visual Studio 2019*
 but can be installed separately:
 
-1. Go to the [Visual Studio downloads](https://visualstudio.microsoft.com/vs/older-downloads/){:.external},
-2. Select *Redistributables and Build Tools*,
-3. Download and install:
-   - *Microsoft Visual C++ 2015 Redistributable Update 3*
-   - *Microsoft Build Tools 2015 Update 3*
+1.  Go to the
+    [Visual Studio downloads](https://visualstudio.microsoft.com/downloads/){:.external},
+2.  Select *Redistributables and Build Tools*,
+3.  Download and install:
+    -   *Microsoft Visual C++ 2019 Redistributable*
+    -   *Microsoft Build Tools 2019*
 
-Note: TensorFlow is tested against the *Visual Studio 2015 Update 3*.
+Note: TensorFlow is tested against the *Visual Studio 2019*.
 
 ### Install GPU support (optional)
 
-See the Windows [GPU support](./gpu.md) guide to install the drivers and additional
-software required to run TensorFlow on a GPU.
-
+See the Windows [GPU support](./gpu.md) guide to install the drivers and
+additional software required to run TensorFlow on a GPU.
 
 ### Download the TensorFlow source code
 
@@ -101,7 +104,8 @@ python ./configure.py
 
 This script prompts you for the location of TensorFlow dependencies and asks for
 additional build configuration options (compiler flags, for example). The
-following shows a sample run of `python ./configure.py` (your session may differ):
+following shows a sample run of `python ./configure.py` (your session may
+differ):
 
 <section class="expandable">
 <h4 class="showalways">View sample configuration session</h4>
@@ -110,7 +114,7 @@ python ./configure.py
 Starting local Bazel server and connecting to it...
 ................
 You have bazel 0.15.0 installed.
-Please specify the location of python. [Default is C:\python36\python.exe]: 
+Please specify the location of python. [Default is C:\python36\python.exe]:
 
 Found possible Python library paths:
   C:\python36\lib\site-packages
@@ -131,7 +135,7 @@ Please specify a list of comma-separated Cuda compute capabilities you want to b
 You can find the compute capability of your device at: https://developer.nvidia.com/cuda-gpus.
 Please note that each additional compute capability significantly increases your build time and binary size. [Default is: 3.5,7.0]: <b>3.7</b>
 
-Please specify optimization flags to use during compilation when bazel option "--config=opt" is specified [Default is /arch:AVX]: 
+Please specify optimization flags to use during compilation when bazel option "--config=opt" is specified [Default is /arch:AVX]:
 
 Would you like to override eigen strong inline for some C++ compilation to reduce the compilation time? [Y/n]:
 Eigen strong inline overridden.
@@ -144,9 +148,9 @@ Configuration finished
 
 For [GPU support](./gpu.md), specify the versions of CUDA and cuDNN. If your
 system has multiple versions of CUDA or cuDNN installed, explicitly set the
-version instead of relying on the default. `./configure.py` creates symbolic links
-to your system's CUDA libraries—so if you update your CUDA library paths, this
-configuration step must be run again before building.
+version instead of relying on the default. `./configure.py` creates symbolic
+links to your system's CUDA libraries—so if you update your CUDA library paths,
+this configuration step must be run again before building.
 
 Note: Starting with TensorFlow 1.6, binaries use AVX instructions which may not
 run on older CPUs.
@@ -154,7 +158,25 @@ run on older CPUs.
 
 ## Build the pip package
 
-### Bazel build
+### TensorFlow 2.x
+
+tensorflow:master repo has been updated to build 2.x by default.
+[Install Bazel](https://docs.bazel.build/versions/master/install.html) and use
+`bazel build ` to create the TensorFlow package.
+
+<pre class="devsite-terminal tfo-terminal-windows devsite-click-to-copy">
+bazel build //tensorflow/tools/pip_package:build_pip_package
+</pre>
+
+
+### TensorFlow 1.x
+
+To build the 1.x version of TensorFlow from master, use
+`bazel build --config=v1` to create a TensorFlow 1.x package.
+
+<pre class="devsite-terminal tfo-terminal-windows devsite-click-to-copy">
+bazel build --config=v1 //tensorflow/tools/pip_package:build_pip_package
+</pre>
 
 #### CPU-only
 
@@ -175,11 +197,15 @@ bazel build --config=opt --config=cuda --define=no_tensorflow_py_deps=true //ten
 #### Bazel build options
 
 Use this option when building to avoid issue with package creation:
-https://github.com/tensorflow/tensorflow/issues/22390
+[tensorflow:issue#22390](https://github.com/tensorflow/tensorflow/issues/22390)
 
 <pre class="devsite-terminal tfo-terminal-windows devsite-click-to-copy">
 --define=no_tensorflow_py_deps=true
 </pre>
+
+See the Bazel [command-line reference](https://docs.bazel.build/versions/master/command-line-reference.html)
+for
+[build options](https://docs.bazel.build/versions/master/command-line-reference.html#build-options).
 
 Building TensorFlow from source can use a lot of RAM. If your system is
 memory-constrained, limit Bazel's RAM usage with: `--local_ram_resources=2048`.
@@ -190,8 +216,8 @@ to suppress nvcc warning messages.
 ### Build the package
 
 The `bazel build` command creates an executable named `build_pip_package`—this
-is the program that builds the `pip` package. For example, the following builds a
-`.whl` package in the `C:/tmp/tensorflow_pkg` directory:
+is the program that builds the `pip` package. For example, the following builds
+a `.whl` package in the `C:/tmp/tensorflow_pkg` directory:
 
 <pre class="devsite-terminal tfo-terminal-windows devsite-click-to-copy">
 bazel-bin\tensorflow\tools\pip_package\build_pip_package C:/tmp/tensorflow_pkg
@@ -221,9 +247,9 @@ below, then follow the previous instructions for the Windows native command line
 
 ### Disable MSYS path conversion {:.hide-from-toc}
 
-MSYS automatically converts arguments that look like Unix paths to Windows paths,
-and this doesn't work with `bazel`. (The label `//foo/bar:bin` is considered a
-Unix absolute path since it starts with a slash.)
+MSYS automatically converts arguments that look like Unix paths to Windows
+paths, and this doesn't work with `bazel`. (The label `//path/to:bin` is
+considered a Unix absolute path since it starts with a slash.)
 
 <pre class="prettyprint lang-bsh">
 <code class="devsite-terminal">export MSYS_NO_PATHCONV=1</code>
@@ -245,21 +271,29 @@ variable. If Bazel is installed to `C:\tools\bazel.exe`, and Python to
 For GPU support, add the CUDA and cuDNN bin directories to your `$PATH`:
 
 <pre class="prettyprint lang-bsh">
-<code class="devsite-terminal">export PATH="/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v9.0/bin:$PATH"</code>
-<code class="devsite-terminal">export PATH="/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v9.0/extras/CUPTI/libx64:$PATH"</code>
+<code class="devsite-terminal">export PATH="/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.0/bin:$PATH"</code>
+<code class="devsite-terminal">export PATH="/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.0/extras/CUPTI/libx64:$PATH"</code>
 <code class="devsite-terminal">export PATH="/c/tools/cuda/bin:$PATH"</code>
 </pre>
 
-
+<a name="tested_build_configurations"></a>
 ## Tested build configurations
 
 ### CPU
 
 <table>
 <tr><th>Version</th><th>Python version</th><th>Compiler</th><th>Build tools</th></tr>
-<tr><td>tensorflow-1.13.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Cmake v3.6.3</td></tr>
-<tr><td>tensorflow-1.12.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Cmake v3.6.3</td></tr>
-<tr><td>tensorflow-1.11.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Cmake v3.6.3</td></tr>
+<tr><td>tensorflow-2.5.0</td><td>3.6-3.9</td><td>MSVC 2019</td><td>Bazel 3.7.2</td></tr>
+<tr><td>tensorflow-2.4.0</td><td>3.6-3.8</td><td>MSVC 2019</td><td>Bazel 3.1.0</td></tr>
+<tr><td>tensorflow-2.3.0</td><td>3.5-3.8</td><td>MSVC 2019</td><td>Bazel 3.1.0</td></tr>
+<tr><td>tensorflow-2.2.0</td><td>3.5-3.8</td><td>MSVC 2019</td><td>Bazel 2.0.0</td></tr>
+<tr><td>tensorflow-2.1.0</td><td>3.5-3.7</td><td>MSVC 2019</td><td>Bazel 0.27.1-0.29.1</td></tr>
+<tr><td>tensorflow-2.0.0</td><td>3.5-3.7</td><td>MSVC 2017</td><td>Bazel 0.26.1</td></tr>
+<tr><td>tensorflow-1.15.0</td><td>3.5-3.7</td><td>MSVC 2017</td><td>Bazel 0.26.1</td></tr>
+<tr><td>tensorflow-1.14.0</td><td>3.5-3.7</td><td>MSVC 2017</td><td>Bazel 0.24.1-0.25.2</td></tr>
+<tr><td>tensorflow-1.13.0</td><td>3.5-3.7</td><td>MSVC 2015 update 3</td><td>Bazel 0.19.0-0.21.0</td></tr>
+<tr><td>tensorflow-1.12.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Bazel 0.15.0</td></tr>
+<tr><td>tensorflow-1.11.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Bazel 0.15.0</td></tr>
 <tr><td>tensorflow-1.10.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Cmake v3.6.3</td></tr>
 <tr><td>tensorflow-1.9.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Cmake v3.6.3</td></tr>
 <tr><td>tensorflow-1.8.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Cmake v3.6.3</td></tr>
@@ -277,8 +311,16 @@ For GPU support, add the CUDA and cuDNN bin directories to your `$PATH`:
 
 <table>
 <tr><th>Version</th><th>Python version</th><th>Compiler</th><th>Build tools</th><th>cuDNN</th><th>CUDA</th></tr>
-<tr><td>tensorflow_gpu-1.13.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Bazel 0.15.0</td><td>7</td><td>9</td></tr>
-<tr><td>tensorflow_gpu-1.12.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Bazel 0.15.0</td><td>7</td><td>9</td></tr>
+<tr><td>tensorflow_gpu-2.5.0</td><td>3.6-3.9</td><td>MSVC 2019</td><td>Bazel 3.7.2</td><td>8.1</td><td>11.2</td></tr>
+<tr><td>tensorflow_gpu-2.4.0</td><td>3.6-3.8</td><td>MSVC 2019</td><td>Bazel 3.1.0</td><td>8.0</td><td>11.0</td></tr>
+<tr><td>tensorflow_gpu-2.3.0</td><td>3.5-3.8</td><td>MSVC 2019</td><td>Bazel 3.1.0</td><td>7.6</td><td>10.1</td></tr>
+<tr><td>tensorflow_gpu-2.2.0</td><td>3.5-3.8</td><td>MSVC 2019</td><td>Bazel 2.0.0</td><td>7.6</td><td>10.1</td></tr>
+<tr><td>tensorflow_gpu-2.1.0</td><td>3.5-3.7</td><td>MSVC 2019</td><td>Bazel 0.27.1-0.29.1</td><td>7.6</td><td>10.1</td></tr>
+<tr><td>tensorflow_gpu-2.0.0</td><td>3.5-3.7</td><td>MSVC 2017</td><td>Bazel 0.26.1</td><td>7.4</td><td>10</td></tr>
+<tr><td>tensorflow_gpu-1.15.0</td><td>3.5-3.7</td><td>MSVC 2017</td><td>Bazel 0.26.1</td><td>7.4</td><td>10</td></tr>
+<tr><td>tensorflow_gpu-1.14.0</td><td>3.5-3.7</td><td>MSVC 2017</td><td>Bazel 0.24.1-0.25.2</td><td>7.4</td><td>10</td></tr>
+<tr><td>tensorflow_gpu-1.13.0</td><td>3.5-3.7</td><td>MSVC 2015 update 3</td><td>Bazel 0.19.0-0.21.0</td><td>7.4</td><td>10</td></tr>
+<tr><td>tensorflow_gpu-1.12.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Bazel 0.15.0</td><td>7.2</td><td>9.0</td></tr>
 <tr><td>tensorflow_gpu-1.11.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Bazel 0.15.0</td><td>7</td><td>9</td></tr>
 <tr><td>tensorflow_gpu-1.10.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Cmake v3.6.3</td><td>7</td><td>9</td></tr>
 <tr><td>tensorflow_gpu-1.9.0</td><td>3.5-3.6</td><td>MSVC 2015 update 3</td><td>Cmake v3.6.3</td><td>7</td><td>9</td></tr>

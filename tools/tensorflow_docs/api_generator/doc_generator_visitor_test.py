@@ -1,3 +1,4 @@
+# Lint as: python3
 # Copyright 2015 The TensorFlow Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +15,7 @@
 # ==============================================================================
 """Tests for tools.docs.doc_generator_visitor."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
+import argparse
 import os
 import types
 
@@ -90,21 +88,23 @@ class DocGeneratorVisitorTest(absltest.TestCase):
         [('tf', tf)],
         base_dir=os.path.dirname(tf.__file__),
         private_map={},
-        do_not_descend_map={},
         visitor_cls=NoDunderVisitor)
 
-    self.assertEqual({
-        'tf.submodule.Parent':
-            sorted([
-                'tf.Parent',
-                'tf.submodule.Parent',
-            ]),
-        'tf.submodule.Parent.Nested':
-            sorted([
-                'tf.Parent.Nested',
-                'tf.submodule.Parent.Nested',
-            ]),
-    }, visitor.duplicates)
+    self.assertEqual(
+        {
+            'tf.submodule.Parent':
+                sorted([
+                    'tf.Parent',
+                    'tf.submodule.Parent',
+                ]),
+            'tf.submodule.Parent.Nested':
+                sorted([
+                    'tf.Parent.Nested',
+                    'tf.submodule.Parent.Nested',
+                ]),
+            'tf': ['tf'],
+            'tf.submodule': ['tf.submodule']
+        }, visitor.duplicates)
 
     self.assertEqual({
         'tf.Parent.Nested': 'tf.submodule.Parent.Nested',
@@ -134,13 +134,11 @@ class DocGeneratorVisitorTest(absltest.TestCase):
         [('tf', tf)],
         base_dir=os.path.dirname(tf.__file__),
         private_map={},
-        do_not_descend_map={},
         visitor_cls=NoDunderVisitor)
 
-    self.assertEqual({
-        'tf.submodule.Parent':
-            sorted(['tf.contrib.Parent', 'tf.submodule.Parent']),
-    }, visitor.duplicates)
+    self.assertEqual(
+        sorted(['tf.contrib.Parent', 'tf.submodule.Parent']),
+        visitor.duplicates['tf.submodule.Parent'])
 
     self.assertEqual({
         'tf.contrib.Parent': 'tf.submodule.Parent',
@@ -170,15 +168,13 @@ class DocGeneratorVisitorTest(absltest.TestCase):
         [('tf', tf)],
         base_dir=os.path.dirname(tf.__file__),
         private_map={},
-        do_not_descend_map={},
         visitor_cls=NoDunderVisitor)
 
-    self.assertEqual({
-        'tf.Parent.obj1': sorted([
+    self.assertEqual(
+        sorted([
             'tf.Parent.obj1',
             'tf.Child.obj1',
-        ]),
-    }, visitor.duplicates)
+        ]), visitor.duplicates['tf.Parent.obj1'])
 
     self.assertEqual({
         'tf.Child.obj1': 'tf.Parent.obj1',
@@ -207,12 +203,11 @@ class DocGeneratorVisitorTest(absltest.TestCase):
         [('tf', tf)],
         base_dir=os.path.dirname(tf.__file__),
         private_map={},
-        do_not_descend_map={},
         visitor_cls=NoDunderVisitor)
 
-    self.assertEqual({
-        'tf.Parent': sorted(['tf.Parent', 'tf.submodule.submodule2.Parent']),
-    }, visitor.duplicates)
+    self.assertEqual(
+        sorted(['tf.Parent', 'tf.submodule.submodule2.Parent']),
+        visitor.duplicates['tf.Parent'])
 
     self.assertEqual({
         'tf.submodule.submodule2.Parent': 'tf.Parent'
@@ -241,16 +236,12 @@ class DocGeneratorVisitorTest(absltest.TestCase):
         [('tf', tf)],
         base_dir=os.path.dirname(tf.__file__),
         private_map={},
-        do_not_descend_map={},
         visitor_cls=NoDunderVisitor)
-
-    self.assertEqual({
-        'tf.submodule.Parent.obj1':
-            sorted([
-                'tf.submodule.Parent.obj1',
-                'tf.submodule.Parent.obj2',
-            ]),
-    }, visitor.duplicates)
+    self.assertEqual(
+        sorted([
+            'tf.submodule.Parent.obj1',
+            'tf.submodule.Parent.obj2',
+        ]), visitor.duplicates['tf.submodule.Parent.obj1'])
 
     self.assertEqual({
         'tf.submodule.Parent.obj2': 'tf.submodule.Parent.obj1',
@@ -262,6 +253,72 @@ class DocGeneratorVisitorTest(absltest.TestCase):
         id(Parent): 'tf.submodule.Parent',
         id(Parent.obj1): 'tf.submodule.Parent.obj1',
     }, visitor.reverse_index)
+
+
+class ApiTreeTest(absltest.TestCase):
+
+  def test_contains(self):
+    tf = argparse.Namespace()
+    tf.sub = argparse.Namespace()
+
+    tree = doc_generator_visitor.ApiTree()
+    tree[('tf',)] = tf
+    tree[('tf', 'sub')] = tf.sub
+
+    self.assertIn(('tf',), tree)
+    self.assertIn(('tf', 'sub'), tree)
+
+  def test_node_insertion(self):
+    tf = argparse.Namespace()
+    tf.sub = argparse.Namespace()
+    tf.sub.object = object()
+
+    tree = doc_generator_visitor.ApiTree()
+    tree[('tf',)] = tf
+    tree[('tf', 'sub')] = tf.sub
+    tree[('tf', 'sub', 'thing')] = tf.sub.object
+
+    node = tree[('tf', 'sub')]
+    self.assertEqual(node.full_name, 'tf.sub')
+    self.assertIs(node.py_object, tf.sub)
+    self.assertIs(node.parent, tree[('tf',)])
+    self.assertLen(node.children, 1)
+    self.assertIs(node.children['thing'], tree[('tf', 'sub', 'thing')])
+
+  def test_duplicate(self):
+    tf = argparse.Namespace()
+    tf.sub = argparse.Namespace()
+    tf.sub.thing = object()
+    tf.sub2 = argparse.Namespace()
+    tf.sub2.thing = tf.sub.thing
+
+    tree = doc_generator_visitor.ApiTree()
+    tree[('tf',)] = tf
+    tree[('tf', 'sub')] = tf.sub
+    tree[('tf', 'sub', 'thing')] = tf.sub.thing
+    tree[('tf', 'sub2')] = tf.sub2
+    tree[('tf', 'sub2', 'thing')] = tf.sub2.thing
+
+    self.assertCountEqual(
+        tree.aliases[id(tf.sub.thing)],
+        [tree[('tf', 'sub', 'thing')], tree[('tf', 'sub2', 'thing')]])
+
+  def test_duplicate_singleton(self):
+    tf = argparse.Namespace()
+    tf.sub = argparse.Namespace()
+    tf.sub.thing = 999
+    tf.sub2 = argparse.Namespace()
+    tf.sub2.thing = tf.sub.thing
+
+    tree = doc_generator_visitor.ApiTree()
+    tree[('tf',)] = tf
+    tree[('tf', 'sub')] = tf.sub
+    tree[('tf', 'sub', 'thing')] = tf.sub.thing
+    tree[('tf', 'sub2')] = tf.sub2
+    tree[('tf', 'sub2', 'thing')] = tf.sub2.thing
+
+    self.assertEmpty(tree.aliases[tf.sub.thing], [])
+
 
 if __name__ == '__main__':
   absltest.main()

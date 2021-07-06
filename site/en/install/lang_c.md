@@ -5,13 +5,23 @@ TensorFlow provides a C API that can be used to build
 <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/c/c_api.h" class="external"><code>c_api.h</code></a>
 and designed for simplicity and uniformity rather than convenience.
 
+## Nightly Libtensorflow C packages
+
+Libtensorflow packages are built nightly and uploaded to GCS for all supported
+platforms. They are uploaded to the
+[libtensorflow-nightly GCS bucket](https://storage.googleapis.com/libtensorflow-nightly)
+and are indexed by operating system and date built. For MacOS and Linux shared
+objects, we have a
+[script](https://github.com/tensorflow/tensorflow/blob/master/tensorflow/tools/ci_build/builds/libtensorflow_nightly_symlink.sh)
+that renames the .so files versioned to the current date copied into the
+directory with the artifacts.
 
 ## Supported Platforms
 
 TensorFlow for C is supported on the following systems:
 
 * Linux, 64-bit, x86
-* macOS X, Version 10.12.6 (Sierra) or higher
+* macOS, Version 10.12.6 (Sierra) or higher
 * Windows, 64-bit x86
 
 ## Setup
@@ -23,25 +33,25 @@ TensorFlow for C is supported on the following systems:
   <tr class="alt"><td colspan="2">Linux</td></tr>
   <tr>
     <td>Linux CPU only</td>
-    <td class="devsite-click-to-copy"><a href="https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-1.13.1.tar.gz">https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-1.13.1.tar.gz</a></td>
+    <td class="devsite-click-to-copy"><a href="https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-2.5.0.tar.gz">https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-2.5.0.tar.gz</a></td>
   </tr>
   <tr>
     <td>Linux GPU support</td>
-    <td class="devsite-click-to-copy"><a href="https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-1.13.1.tar.gz">https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-1.13.1.tar.gz</a></td>
+    <td class="devsite-click-to-copy"><a href="https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-2.5.0.tar.gz">https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-linux-x86_64-2.5.0.tar.gz</a></td>
   </tr>
   <tr class="alt"><td colspan="2">macOS</td></tr>
   <tr>
     <td>macOS CPU only</td>
-    <td class="devsite-click-to-copy"><a href="https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-darwin-x86_64-1.13.1.tar.gz">https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-darwin-x86_64-1.13.1.tar.gz</a></td>
+    <td class="devsite-click-to-copy"><a href="https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-darwin-x86_64-2.5.0.tar.gz">https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-darwin-x86_64-2.5.0.tar.gz</a></td>
   </tr>
   <tr class="alt"><td colspan="2">Windows</td></tr>
   <tr>
     <td>Windows CPU only</td>
-    <td class="devsite-click-to-copy"><a href="https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-windows-x86_64-1.13.1.zip">https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-windows-x86_64-1.13.1.zip</a></td>
+    <td class="devsite-click-to-copy"><a href="https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-windows-x86_64-2.5.0.zip">https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-windows-x86_64-2.5.0.zip</a></td>
   </tr>
   <tr>
     <td>Windows GPU only</td>
-    <td class="devsite-click-to-copy"><a href="https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-windows-x86_64-1.13.1.zip">https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-windows-x86_64-1.13.1.zip</a></td>
+    <td class="devsite-click-to-copy"><a href="https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-windows-x86_64-2.5.0.zip">https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-gpu-windows-x86_64-2.5.0.zip</a></td>
   </tr>
 </table>
 
@@ -77,7 +87,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/mydir/lib
 </pre>
 </section>
 <section>
-<h3>mac OS</h3>
+<h3>macOS</h3>
 <pre class="prettyprint lang-bsh">
 export LIBRARY_PATH=$LIBRARY_PATH:~/mydir/lib
 export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:~/mydir/lib

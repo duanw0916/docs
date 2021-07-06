@@ -1,85 +1,95 @@
 toc:
-- title: "TensorFlow Guide"
+- title: "TensorFlow guide"
   path: /guide/
 
-- heading: High Level APIs
-- title: "Keras"
-  path: /guide/keras
-- title: "Eager Execution"
+- heading: "TensorFlow 2"
+- title: "Effective TensorFlow"
+  path: /guide/effective_tf2
+- title: "Migrate from TF1 to TF2"
+  path: /guide/migrate
+- title: "Convert with the upgrade script"
+  path: /guide/upgrade
+- title: "Community testing FAQ"
+  path: https://github.com/tensorflow/community/blob/master/sigs/testing/faq.md
+  status: external
+
+- heading: "TensorFlow basics"
+  status: new
+- title: "Eager execution"
   path: /guide/eager
-- title: "Importing Data"
-  path: /guide/datasets
-- title: "Introduction to Estimators"
-  path: /guide/estimators
+- title: "Tensor"
+  path: /guide/tensor
+- title: "Variable"
+  path: /guide/variable
+- title: "Automatic differentiation"
+  path: /guide/autodiff
+- title: "Intro to graphs and functions"
+  path: /guide/intro_to_graphs
+- title: "Intro to modules, layers, and models"
+  path: /guide/intro_to_modules
+- title: "Training loops"
+  path: /guide/basic_training_loops
+- title: "Advanced autodiff"
+  path: /guide/advanced_autodiff
+- title: "Ragged tensor"
+  path: /guide/ragged_tensor
+- title: "Sparse tensor"
+  status: new
+  path: /guide/sparse_tensor
+- title: "NumPy API"
+  path: /guide/tf_numpy
+- title: "Tensor slicing"
+  status: new
+  path: /guide/tensor_slicing
 
-- heading: Estimators
-- title: "Premade Estimators"
-  path: /guide/premade_estimators
-- title: "Checkpoints"
-  path: /guide/checkpoints
-- title: "Feature Columns"
-  path: /guide/feature_columns
-- title: "Datasets for Estimators"
-  path: /guide/datasets_for_estimators
-- title: "Creating Custom Estimators"
-  path: /guide/custom_estimators
+- heading: "Keras"
+- include: /guide/keras/_toc.yaml
 
-- heading: Accelerators
-- title: "Distribute Strategy"
-  path: /guide/distribute_strategy
-- title: "Using GPUs"
-  path: /guide/using_gpu
-- title: "Using TPUs"
-  path: /guide/using_tpu
+- heading: "Customization"
+- title: "Create an op"
+  path: /guide/create_op
+- title: "Random number generation"
+  path: /guide/random_numbers
 
-- heading: Low Level APIs
-- title: "Introduction"
-  path: /guide/low_level_intro
-- title: "Tensors"
-  path: /guide/tensors
-- title: "Variables"
-  path: /guide/variables
-- title: "Graphs and Sessions"
-  path: /guide/graphs
-- title: "Save and Restore"
+- heading: "Data input pipelines"
+- title: "tf.data"
+  path: /guide/data
+- title: "Optimize pipeline performance"
+  path: /guide/data_performance
+- title: "Analyze pipeline performance"
+  path: /guide/data_performance_analysis
+
+- heading: "Save a model"
+- title: "Checkpoint"
+  path: /guide/checkpoint
+- title: "SavedModel"
   path: /guide/saved_model
-- title: "Control flow"
-  path: /guide/autograph
-- title: "Ragged Tensors"
-  path: /guide/ragged_tensors
 
-- heading: ML Concepts
-- title: "Embeddings"
-  path: /guide/embedding
 
-- heading: Debugging
-- title: "TensorFlow Debugger"
-  path: /guide/debugger
+- heading: "Accelerators"
+- title: "Distributed training"
+  path: /guide/distributed_training
+- title: "GPU"
+  path: /guide/gpu
+- title: "TPU"
+  path: /guide/tpu
 
-- heading: Performance
-- title: Overview
-  path: /guide/performance/overview
-- title: Data input pipeline
-  path: /guide/performance/datasets
-- title: Benchmarks
-  path: /guide/performance/benchmarks
+- heading: "Performance"
+- title: "Better performance with tf.function"
+  path: /guide/function
+- title: "Profile TensorFlow performance"
+  path: /guide/profiler
+- title: "Optimize GPU Performance"
+  path: /guide/gpu_performance_analysis
+- title: "Graph optimization"
+  path: /guide/graph_optimization
+- title: "Mixed precision"
+  path: /guide/mixed_precision
 
-- heading: Extend
-- title: TensorFlow architecture
-  path: /guide/extend/architecture
-- title: Create an op
-  path: /guide/extend/op
-- title: Custom filesystem plugin
-  path: /guide/extend/filesystem
-- title: Custom file and record formats
-  path: /guide/extend/formats
-- title: Model files
-  path: /guide/extend/model_files
-- title: Language bindings
-  path: /guide/extend/bindings
-- title: C++ guide
-  path: /guide/extend/cc
+- heading: "Estimators"
+- title: "Estimator overview"
+  path: /guide/estimator
 
-- heading: Misc
-- title: "TensorFlow Version Compatibility"
-  path: /guide/version_compat
+- heading: "Appendix"
+- title: "Version compatibility"
+  path: /guide/versions

@@ -1,13 +1,16 @@
-# TensorFlow White Papers
+# Citing TensorFlow
 
-This document identifies white papers about TensorFlow.
+TensorFlow publishes a DOI for the open-source code base using Zenodo.org:
+[10.5281/zenodo.4724125](https://doi.org/10.5281/zenodo.4724125)
+
+TensorFlow's white papers are listed for citation below.
 
 ## Large-Scale Machine Learning on Heterogeneous Distributed Systems
 
 [Access this white paper.](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/45166.pdf)
 
 **Abstract:** TensorFlow is an interface for expressing machine learning
-algorithms, and an implementation for executing such algorithms.
+algorithms and an implementation for executing such algorithms.
 A computation expressed using TensorFlow can be
 executed with little or no change on a wide variety of heterogeneous
 systems, ranging from mobile devices such as phones
@@ -113,7 +116,7 @@ uses dataflow graphs to represent computation,
 shared state, and the operations that mutate that state. It
 maps the nodes of a dataflow graph across many machines
 in a cluster, and within a machine across multiple computational
-devices, including multicore CPUs, generalpurpose
+devices, including multicore CPUs, general purpose
 GPUs, and custom-designed ASICs known as
 Tensor Processing Units (TPUs). This architecture gives
 flexibility to the application developer: whereas in previous
